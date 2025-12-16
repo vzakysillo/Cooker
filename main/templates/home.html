@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="mb-4 text-center">🍲 Recipes</h2>
+
+<form method="get" class="mb-4">
+    <input type="text" name="q" placeholder="Search..." class="form-control" value="{{ request.GET.q }}">
+</form>
+
+<div class="row">
+    {% for recipe in recipes %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            {% if recipe.image %}
+            <img src="{{ recipe.image.url }}" class="card-img-top" alt="{{ recipe.title }}" style="height:200px; object-fit:cover;">
+            {% endif %}
+            <div class="card-body d-flex flex-column">
+                <p class="card-text text-muted mb-1"><strong>Author:</strong> {{ recipe.author.username }}</p>
+                <p class="card-text mb-3"><strong>Prep time:</strong> {{ recipe.preparation_time }} min</p>
+
+                <a href="{% url 'recipe_detail' recipe.id %}" class="btn btn-primary mt-auto">View Recipe</a>
+
+                {% if recipe.author == request.user %}
+                    <div class="mt-2">
+                        <a href="{% url 'edit_recipe' recipe.id %}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{% url 'delete_recipe' recipe.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>No recipes found.</p>
+    {% endfor %}
+</div>
+{% endblock %}

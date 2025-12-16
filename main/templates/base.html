@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recipe App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        footer {
+            background-color: #f8f9fa;
+            border-top: 1px solid #e2e2e2;
+            padding: 20px 0;
+            margin-top: auto;
+        }
+        .navbar {
+            background: linear-gradient(90deg, #ff9966, #ff5e62);
+        }
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+        .footer-text {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg shadow-sm mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{% url 'home' %}">🍲 RecipeApp</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <form method="post" action="{% url 'logout' %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-link nav-link p-0" style="color:white; text-decoration:none;">Logout</button>
+                            </form>
+                        </li>
+                        {% if user.is_authenticated and perms.recipes.add_recipe %}
+                            <li class="nav-item">
+                                <a class="btn btn-light btn-sm ms-2" href="{% url 'add_recipe' %}">+ Add Recipe</a>
+                            </li>
+                        {% endif %}
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mb-5">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center">
+        <div class="container">
+            <p class="footer-text mb-1">
+                © {{ now|date:"Y" }} RecipeApp. Crafted with ❤️ for cooking enthusiasts.
+            </p>
+            <p class="footer-text">
+                <a href="#" class="text-decoration-none text-muted">Privacy Policy</a> |
+                <a href="#" class="text-decoration-none text-muted">Terms of Service</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
